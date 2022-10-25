@@ -1,2 +1,0 @@
-include 'collector-core'
-include 'collector-target-filesystem'
