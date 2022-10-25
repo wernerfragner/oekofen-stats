@@ -12,6 +12,6 @@ public class ConsoleTarget implements CollectorTarget
   @Override
   public void accept(String collectedJson)
   {
-    LOG.info("Collected JSON: {}", collectedJson);
+    LOG.info("Collected JSON: {}", collectedJson.replace("\n", "").replace("\r", ""));
   }
 }
