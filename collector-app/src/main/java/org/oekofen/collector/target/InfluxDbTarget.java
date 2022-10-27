@@ -2,19 +2,20 @@ package org.oekofen.collector.target;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.Point;
+import com.influxdb.exceptions.InfluxException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
-import org.influxdb.InfluxDBIOException;
-import org.influxdb.dto.Point;
-import org.influxdb.dto.Pong;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class InfluxDbTarget implements CollectorTarget, AutoCloseable
@@ -22,80 +23,43 @@ public class InfluxDbTarget implements CollectorTarget, AutoCloseable
 
   private static final Logger LOG = LogManager.getLogger();
   private final String databaseURL;
-  private final String user;
-  private final String password;
-  private final String database;
+  private final String token;
+  private final String organization;
+  private final String bucket;
   @Value("${collect.target.influxdb.measurement:heating}")
   private String measurement;
 
-  private InfluxDB influxDB;
+  private InfluxDBClient influxDB;
 
   public InfluxDbTarget(@Value("${collect.target.influxdb.url}") String databaseURL,
-                        @Value("${collect.target.influxdb.user}") String user,
-                        @Value("${collect.target.influxdb.password}") String password,
-                        @Value("${collect.target.influxdb.database}") String database)
+                        @Value("${collect.target.influxdb.token}") String token,
+                        @Value("${collect.target.influxdb.organization}") String organization,
+                        @Value("${collect.target.influxdb.bucket}") String bucket)
   {
     this.databaseURL = databaseURL;
-    this.user = user;
-    this.password = password;
-    this.database = database;
+    this.token = token;
+    this.organization = organization;
+    this.bucket = bucket;
 
     getOrCreateConnection();
   }
 
   @NotNull
-  private InfluxDB getOrCreateConnection()
+  private InfluxDBClient getOrCreateConnection()
   {
     if (influxDB != null)
     {
       return influxDB;
     }
 
-    influxDB = InfluxDBFactory.connect(databaseURL, user, password);
-    influxDB.setLogLevel(InfluxDB.LogLevel.BASIC);
-    if (pingServer(influxDB, databaseURL, user))
-    {
-      if (!influxDB.databaseExists(database))
-      {
-        LOG.info("Creating database '{}' ...", database);
-        influxDB.createDatabase(database);
-        influxDB.createRetentionPolicy("defaultPolicy", database, "365d", 1, true);
-        LOG.info("Successfully created database '{}'", database);
-      }
-      influxDB.setRetentionPolicy("defaultPolicy");
-      influxDB.setDatabase(database);
-    }
-    else
-    {
-      // no valid connection, try again later
-      influxDB = null;
-    }
+    LOG.info("Connecting to InfluxDB: url={}, organisation={}, bucket={} ...",
+            databaseURL, organization, bucket);
+    influxDB = InfluxDBClientFactory.create(databaseURL, token.toCharArray(), organization, bucket);
+    LOG.info("Successfully connected to InfluxDB: url={}, organisation={}, bucket={}",
+            databaseURL, organization, bucket);
     return influxDB;
   }
 
-  private boolean pingServer(InfluxDB influxDB, String databaseURL, String user)
-  {
-    try
-    {
-      // Ping and check for version string
-      Pong response = influxDB.ping();
-      if (response.getVersion().equalsIgnoreCase("unknown"))
-      {
-        LOG.error("Error pinging InfluxDB server. url={}, user={}", databaseURL, user);
-        return false;
-      }
-      else
-      {
-        LOG.info("InfluxDB version: {}", response.getVersion());
-        return true;
-      }
-    }
-    catch (InfluxDBIOException e)
-    {
-      LOG.error("Exception while pinging database: url=" + databaseURL + ", user=" + user, e);
-      return false;
-    }
-  }
 
   @Override
   public void accept(String collectedJson)
@@ -104,8 +68,17 @@ public class InfluxDbTarget implements CollectorTarget, AutoCloseable
     if (point != null)
     {
       LOG.info("Writing 'Point' to InfluxDB ...");
-      getOrCreateConnection().write(point);
-      LOG.info("Successfully written 'Point' to InfluxDB.");
+      try
+      {
+        WriteApiBlocking writeApi = getOrCreateConnection().getWriteApiBlocking();
+        writeApi.writePoint(point);
+        LOG.info("Successfully written 'Point' to InfluxDB.");
+      }
+      catch (InfluxException e)
+      {
+        this.influxDB = null;
+        LOG.atError().withThrowable(e).log("Error while writing data to InfluxDB: url={}, organisation={}, bucket={}, error={}", databaseURL, organization, bucket, e.getMessage());
+      }
     }
   }
 
@@ -115,19 +88,18 @@ public class InfluxDbTarget implements CollectorTarget, AutoCloseable
     try
     {
       Map<String, Object> jsonMap = mapper.readValue(collectedJson, Map.class);
-      Point.Builder pointBuilder = Point.measurement(measurement)
-              .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-      addFieldsFromMap(jsonMap, pointBuilder, "");
-      return pointBuilder.build();
+      Point point = Point.measurement(measurement).time(Instant.now(), WritePrecision.S);
+      addFieldsFromMap(jsonMap, point, "");
+      return point;
     }
     catch (JsonProcessingException e)
     {
-      LOG.error("Cannot convert input JSON to Map: " + e.getMessage(), e);
+      LOG.atError().withThrowable(e).log("Cannot convert input JSON to Map: {}", e.getMessage());
       return null;
     }
   }
 
-  private static void addFieldsFromMap(Map<String, Object> jsonMap, Point.Builder pointBuilder, String parentFieldName)
+  private static void addFieldsFromMap(Map<String, Object> jsonMap, Point point, String parentFieldName)
   {
     for (Map.Entry<String, Object> entry : jsonMap.entrySet())
     {
@@ -141,19 +113,19 @@ public class InfluxDbTarget implements CollectorTarget, AutoCloseable
 
       if (value instanceof Map)
       {
-        addFieldsFromMap((Map<String, Object>) value, pointBuilder, fieldName);
+        addFieldsFromMap((Map<String, Object>) value, point, fieldName);
       }
       if (value instanceof Number nr)
       {
-        pointBuilder.addField(fieldName, nr);
+        point.addField(fieldName, nr);
       }
       if (value instanceof String str)
       {
-        pointBuilder.addField(fieldName, str);
+        point.addField(fieldName, str);
       }
       if (value instanceof Boolean b)
       {
-        pointBuilder.addField(fieldName, b);
+        point.addField(fieldName, b);
       }
     }
   }

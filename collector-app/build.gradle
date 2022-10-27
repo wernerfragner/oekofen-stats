@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.influxdb:influxdb-java:2.8'
+	implementation 'com.influxdb:influxdb-client-java:6.6.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
