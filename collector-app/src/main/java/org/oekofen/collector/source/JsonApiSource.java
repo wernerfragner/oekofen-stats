@@ -1,10 +1,15 @@
 package org.oekofen.collector.source;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
+import java.util.Map;
 
 @Component
 public class JsonApiSource
@@ -21,10 +26,25 @@ public class JsonApiSource
   private RestTemplate restTemplate = new RestTemplate();
 
 
-  public String collect()
+  public Map<String, Object> collect()
   {
     LOG.info("Executing HTTP GET request: {}", buildUrl("*****"));
-    return restTemplate.getForObject(buildUrl(password), String.class);
+    String json = restTemplate.getForObject(buildUrl(password), String.class);
+    return convertToMap(json);
+  }
+
+  private Map<String, Object> convertToMap(String json)
+  {
+    ObjectMapper mapper = new ObjectMapper();
+    try
+    {
+      return mapper.readValue(json, Map.class);
+    }
+    catch (JsonProcessingException e)
+    {
+      LOG.atError().withThrowable(e).log("Cannot convert input JSON to Map: {}", e.getMessage());
+      return Collections.emptyMap();
+    }
   }
 
   private String buildUrl(String pwd)

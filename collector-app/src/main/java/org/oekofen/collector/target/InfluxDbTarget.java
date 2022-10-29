@@ -1,7 +1,5 @@
 package org.oekofen.collector.target;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApiBlocking;
@@ -62,41 +60,28 @@ public class InfluxDbTarget implements CollectorTarget, AutoCloseable
 
 
   @Override
-  public void accept(String collectedJson)
+  public void accept(Map<String, Object> data)
   {
-    Point point = convertJsonToPoint(collectedJson);
-    if (point != null)
+    Point point = convertJsonToPoint(data);
+    LOG.info("Writing 'Point' to InfluxDB ...");
+    try
     {
-      LOG.info("Writing 'Point' to InfluxDB ...");
-      try
-      {
-        WriteApiBlocking writeApi = getOrCreateConnection().getWriteApiBlocking();
-        writeApi.writePoint(point);
-        LOG.info("Successfully written 'Point' to InfluxDB.");
-      }
-      catch (InfluxException e)
-      {
-        this.influxDB = null;
-        LOG.atError().withThrowable(e).log("Error while writing data to InfluxDB: url={}, organisation={}, bucket={}, error={}", databaseURL, organization, bucket, e.getMessage());
-      }
+      WriteApiBlocking writeApi = getOrCreateConnection().getWriteApiBlocking();
+      writeApi.writePoint(point);
+      LOG.info("Successfully written 'Point' to InfluxDB.");
+    }
+    catch (InfluxException e)
+    {
+      this.influxDB = null;
+      LOG.atError().withThrowable(e).log("Error while writing data to InfluxDB: url={}, organisation={}, bucket={}, error={}", databaseURL, organization, bucket, e.getMessage());
     }
   }
 
-  private Point convertJsonToPoint(String collectedJson)
+  private Point convertJsonToPoint(Map<String, Object> jsonMap)
   {
-    ObjectMapper mapper = new ObjectMapper();
-    try
-    {
-      Map<String, Object> jsonMap = mapper.readValue(collectedJson, Map.class);
-      Point point = Point.measurement(measurement).time(Instant.now(), WritePrecision.S);
-      addFieldsFromMap(jsonMap, point, "");
-      return point;
-    }
-    catch (JsonProcessingException e)
-    {
-      LOG.atError().withThrowable(e).log("Cannot convert input JSON to Map: {}", e.getMessage());
-      return null;
-    }
+    Point point = Point.measurement(measurement).time(Instant.now(), WritePrecision.S);
+    addFieldsFromMap(jsonMap, point, "");
+    return point;
   }
 
   private static void addFieldsFromMap(Map<String, Object> jsonMap, Point point, String parentFieldName)
