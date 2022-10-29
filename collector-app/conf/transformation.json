@@ -1,0 +1,51 @@
+{
+  "objects": [
+    {
+      "sourceNames": [
+        "hk1",
+        "hk2"
+      ],
+      "targetNames": [
+        "HK1",
+        "HK2"
+      ],
+      "fields": [
+        {
+          "sourceName": "L_roomtemp_act",
+          "targetName": "RoomTemp-ACT",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_roomtemp_set",
+          "targetName": "RoomTemp-SET",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_flowtemp_act",
+          "targetName": "FlowTemp-ACT",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_flowtemp_set",
+          "targetName": "FlowTemp-SET",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "temp_heat",
+          "targetName": "TempHeat",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "temp_setback",
+          "targetName": "TempSetBack",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_pump",
+          "targetName": "Pump",
+          "intToBool": true
+        }
+      ]
+    }
+  ]
+}
