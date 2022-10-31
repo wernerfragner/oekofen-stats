@@ -1,6 +1,17 @@
 {
   "objects": [
     {
+      "sourceName": "weather",
+      "targetName": "WEATHER",
+      "fields": [
+        {
+          "sourceName": "L_temp",
+          "targetName": "Temp-ACT",
+          "divideValueBy": 10
+        }
+      ]
+    },
+    {
       "sourceNames": [
         "hk1",
         "hk2"
@@ -42,8 +53,90 @@
         },
         {
           "sourceName": "L_pump",
-          "targetName": "Pump",
+          "targetName": "PumpOn",
           "intToBool": true
+        }
+      ]
+    },
+    {
+      "sourceName": "pu1",
+      "targetName": "BUFFER",
+      "fields": [
+        {
+          "sourceName": "L_tpo_act",
+          "targetName": "TempTop-ACT",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_tpo_set",
+          "targetName": "TempTop-SET",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_tpm_act",
+          "targetName": "TempMiddle-ACT",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_tpm_set",
+          "targetName": "TempMiddle-SET",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "mintemp_off",
+          "targetName": "MinTempOff-SET",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "mintemp_on",
+          "targetName": "MinTempOn-SET",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "ext_mintemp_off",
+          "targetName": "ExtMinTempOff-SET",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "ext_mintemp_on",
+          "targetName": "ExtMinTempOn-SET",
+          "divideValueBy": 10
+        }
+      ]
+    },
+    {
+      "sourceName": "ww1",
+      "targetName": "WARMWATER",
+      "fields": [
+        {
+          "sourceName": "L_temp_set",
+          "targetName": "Temp-SET",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_ontemp_act",
+          "targetName": "OnTemp-ACT",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_offtemp_act",
+          "targetName": "OnTemp-ACT",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_pump",
+          "targetName": "PumpOn",
+          "intToBool": true
+        },
+        {
+          "sourceName": "temp_min_set",
+          "targetName": "TempMin-SET",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "temp_max_set",
+          "targetName": "TempMax-SET",
+          "divideValueBy": 10
         }
       ]
     }

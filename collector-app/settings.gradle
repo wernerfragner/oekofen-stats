@@ -5,4 +5,4 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = 'collector-app'
+rootProject.name = 'oekofen-collector-app'

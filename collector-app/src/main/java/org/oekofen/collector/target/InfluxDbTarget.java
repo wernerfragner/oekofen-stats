@@ -32,7 +32,7 @@ public class InfluxDbTarget implements CollectorTarget, AutoCloseable
   public InfluxDbTarget(@Value("${collect.target.influxdb.url}") String databaseURL,
                         @Value("${collect.target.influxdb.token}") String token,
                         @Value("${collect.target.influxdb.organization}") String organization,
-                        @Value("${collect.target.influxdb.bucket}") String bucket)
+                        @Value("${collect.target.influxdb.bucket:oekofen}") String bucket)
   {
     this.databaseURL = databaseURL;
     this.token = token;
