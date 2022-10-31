@@ -17,8 +17,8 @@
         "hk2"
       ],
       "targetNames": [
-        "HK1",
-        "HK2"
+        "HC1",
+        "HC2"
       ],
       "fields": [
         {
@@ -106,7 +106,7 @@
     },
     {
       "sourceName": "ww1",
-      "targetName": "WARMWATER",
+      "targetName": "HOTWATER",
       "fields": [
         {
           "sourceName": "L_temp_set",
