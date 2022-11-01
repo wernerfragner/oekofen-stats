@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CollectorApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="org.oekofen.collector.CollectorApplication" />
+    <module name="oekofen-collector-app.main" />
+    <option name="VM_PARAMETERS" value="--illegal-access=warn --add-opens java.base/java.lang.invoke=ALL-UNNAMED" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/collector-app" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="org.oekofen.collector.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
