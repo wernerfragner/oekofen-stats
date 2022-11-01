@@ -1,8 +1,10 @@
+import java.nio.file.Files
+
 plugins {
-	id 'org.springframework.boot' version '2.7.5'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-	id 'java'
-	id 'org.springframework.experimental.aot' version '0.12.1'
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+    id 'org.springframework.experimental.aot' version '0.12.1'
 }
 
 group = 'org.oekofen'
@@ -10,21 +12,49 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
-	maven { url 'https://repo.spring.io/release' }
-	mavenCentral()
+    maven { url 'https://repo.spring.io/release' }
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'com.influxdb:influxdb-client-java:6.6.0'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'com.influxdb:influxdb-client-java:6.6.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 tasks.named('bootBuildImage') {
-	builder = 'paketobuildpacks/builder:tiny'
-	environment = ['BP_NATIVE_IMAGE': 'true']
+    builder = 'paketobuildpacks/builder:tiny'
+    environment = ['BP_NATIVE_IMAGE': 'true']
 }
+
+
+tasks.register('copyLibs', Copy) {
+    group 'build setup'
+    from layout.buildDirectory.dir("libs")
+    into layout.buildDirectory.dir("setup")
+}
+
+tasks.register('copySetup', Copy) {
+    group 'build setup'
+    from layout.buildDirectory.dir("../setup")
+    into layout.buildDirectory.dir("setup")
+}
+
+tasks.register('copyConfigs', Copy) {
+    group 'build setup'
+    from layout.buildDirectory.dir("../config")
+    into layout.buildDirectory.dir("setup/config")
+}
+
+task buildSetupFolder(dependsOn: [ "bootJar", "copyLibs", "copySetup", "copyConfigs"])
+{
+    group 'build setup'
+}
+
+
+
+

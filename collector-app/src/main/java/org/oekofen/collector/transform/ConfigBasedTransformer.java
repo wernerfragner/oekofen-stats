@@ -26,10 +26,11 @@ public class ConfigBasedTransformer implements Transformer
       Path path = Path.of(configFilePath);
       String str = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
       objectTransformations = new Gson().fromJson(str, ObjectTransformations.class);
+      LOG.info("Successfully loaded transformation config from '{}'", configFilePath);
     }
     else
     {
-      LOG.info("No mapping file path given in property 'transform.mapping-file-path'. No mapping transformation is performed.");
+      LOG.info("No mapping file path given in property 'transform.config-file-path'. No mapping transformation is performed.");
     }
   }
 
