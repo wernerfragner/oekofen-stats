@@ -19,7 +19,7 @@ public class ConfigBasedTransformer implements Transformer
   private static final Logger LOG = LogManager.getLogger();
   private ObjectTransformations objectTransformations;
 
-  public ConfigBasedTransformer(@Value("${transform.config-file-path}") String configFilePath) throws IOException
+  public ConfigBasedTransformer(@Value("${collect.transform.config-file-path}") String configFilePath) throws IOException
   {
     if (configFilePath != null)
     {
@@ -30,7 +30,7 @@ public class ConfigBasedTransformer implements Transformer
     }
     else
     {
-      LOG.info("No mapping file path given in property 'transform.config-file-path'. No mapping transformation is performed.");
+      LOG.info("No mapping file path given in property 'collect.transform.config-file-path'. No mapping transformation is performed.");
     }
   }
 

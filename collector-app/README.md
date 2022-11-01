@@ -1,6 +1,6 @@
 # Collector Application
 Collect and store various sensor values of Ökofen heating systems. Following sources are supported:
-- Ökofen JSON HTTP API (must be enabled in your Ökofen stove settings)
+- Ökofen JSON HTTP API (must be enabled in your Ökofen settings)
 
 Following targets are supported:
 - InfluxDB
@@ -9,7 +9,7 @@ Following targets are supported:
 1. Clone the repository
 2. Execute the gradle task 'buildSetupFolder'
 3. A 'setup' folder is created in the gradle 'build' directory
-4. Modify the files in the 'config' folder
+4. Modify the configuration files in the 'config' folder
 5. On Windows execute the 'start-collector-application.bat'
 
 ### VM Options
