@@ -2,11 +2,16 @@
   "objects": [
     {
       "sourceName": "weather",
-      "targetName": "WEATHER",
+      "targetName": "Weather",
       "fields": [
         {
           "sourceName": "L_temp",
-          "targetName": "Temp-ACT",
+          "targetName": "CurrentTemp",
+          "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_forecast_temp",
+          "targetName": "ForecastTemp",
           "divideValueBy": 10
         }
       ]
@@ -23,104 +28,112 @@
       "fields": [
         {
           "sourceName": "L_roomtemp_act",
-          "targetName": "RoomTemp-ACT",
+          "targetName": "RoomTemp (Current)",
           "divideValueBy": 10
         },
         {
           "sourceName": "L_roomtemp_set",
-          "targetName": "RoomTemp-SET",
+          "targetName": "RoomTemp (Target)",
           "divideValueBy": 10
         },
         {
           "sourceName": "L_flowtemp_act",
-          "targetName": "FlowTemp-ACT",
+          "targetName": "FlowTemp (Current)",
           "divideValueBy": 10
         },
         {
           "sourceName": "L_flowtemp_set",
-          "targetName": "FlowTemp-SET",
+          "targetName": "FlowTemp (Target)",
           "divideValueBy": 10
         },
         {
           "sourceName": "temp_heat",
-          "targetName": "TempHeat",
+          "targetName": "HeatTemp",
           "divideValueBy": 10
         },
         {
           "sourceName": "temp_setback",
-          "targetName": "TempSetBack",
+          "targetName": "SetBackTemp",
           "divideValueBy": 10
         },
         {
           "sourceName": "L_pump",
           "targetName": "PumpOn",
           "intToBool": true
+        },
+        {
+          "sourceName": "L_statetext",
+          "targetName": "State"
         }
       ]
     },
     {
       "sourceName": "pu1",
-      "targetName": "BUFFER",
+      "targetName": "Buffer",
       "fields": [
         {
           "sourceName": "L_tpo_act",
-          "targetName": "TempTop-ACT",
+          "targetName": "TempTop (Current)",
           "divideValueBy": 10
         },
         {
           "sourceName": "L_tpo_set",
-          "targetName": "TempTop-SET",
+          "targetName": "TempTop (Target)",
           "divideValueBy": 10
         },
         {
           "sourceName": "L_tpm_act",
-          "targetName": "TempMiddle-ACT",
+          "targetName": "TempMiddle (Current)",
           "divideValueBy": 10
         },
         {
           "sourceName": "L_tpm_set",
-          "targetName": "TempMiddle-SET",
+          "targetName": "TempMiddle (Target)",
           "divideValueBy": 10
         },
         {
           "sourceName": "mintemp_off",
-          "targetName": "MinTempOff-SET",
+          "targetName": "MinTempOff (Target)",
           "divideValueBy": 10
         },
         {
           "sourceName": "mintemp_on",
-          "targetName": "MinTempOn-SET",
+          "targetName": "MinTempOn (Target)",
           "divideValueBy": 10
         },
         {
           "sourceName": "ext_mintemp_off",
-          "targetName": "ExtMinTempOff-SET",
+          "targetName": "ExtMinTempOff (Target)",
           "divideValueBy": 10
         },
         {
           "sourceName": "ext_mintemp_on",
-          "targetName": "ExtMinTempOn-SET",
+          "targetName": "ExtMinTempOn (Target)",
           "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_statetext",
+          "targetName": "State"
         }
       ]
     },
     {
       "sourceName": "ww1",
-      "targetName": "HOTWATER",
+      "targetName": "HotWater",
       "fields": [
         {
           "sourceName": "L_temp_set",
-          "targetName": "Temp-SET",
+          "targetName": "Temp (Target)",
           "divideValueBy": 10
         },
         {
           "sourceName": "L_ontemp_act",
-          "targetName": "OnTemp-ACT",
+          "targetName": "OnTemp",
           "divideValueBy": 10
         },
         {
           "sourceName": "L_offtemp_act",
-          "targetName": "OnTemp-ACT",
+          "targetName": "OffTemp",
           "divideValueBy": 10
         },
         {
@@ -130,13 +143,17 @@
         },
         {
           "sourceName": "temp_min_set",
-          "targetName": "TempMin-SET",
+          "targetName": "MinTemp (Target)",
           "divideValueBy": 10
         },
         {
           "sourceName": "temp_max_set",
-          "targetName": "TempMax-SET",
+          "targetName": "MaxTemp (Target)",
           "divideValueBy": 10
+        },
+        {
+          "sourceName": "L_statetext",
+          "targetName": "State"
         }
       ]
     }
