@@ -1,6 +1,6 @@
 package org.oekofen.collector.transform;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +25,15 @@ public class ConfigBasedTransformer implements Transformer
     {
       Path path = Path.of(configFilePath);
       String str = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-      objectTransformations = new Gson().fromJson(str, ObjectTransformations.class);
-      LOG.info("Successfully loaded transformation config from '{}'", configFilePath);
+      objectTransformations = new ObjectMapper().readValue(str, ObjectTransformations.class);
+      if (objectTransformations.isEmpty())
+      {
+        LOG.warn("Given transformation config from '{}' does not contain any transformation objects.", configFilePath);
+      }
+      else
+      {
+        LOG.info("Successfully loaded transformation config from '{}'", configFilePath);
+      }
     }
     else
     {
@@ -37,7 +44,7 @@ public class ConfigBasedTransformer implements Transformer
   @Override
   public Map<String, Object> transform(Map<String, Object> data)
   {
-    if (objectTransformations == null)
+    if (objectTransformations == null || objectTransformations.isEmpty())
     {
       return data;
     }
@@ -49,7 +56,7 @@ public class ConfigBasedTransformer implements Transformer
       if (objectTransformation != null && objectEntry.getValue() instanceof Map)
       {
         Map<String, Object> resultObject = new HashMap<>();
-        Map<String, Object> fieldsMap = (Map<String, Object>)objectEntry.getValue();
+        Map<String, Object> fieldsMap = (Map<String, Object>) objectEntry.getValue();
         for (Map.Entry<String, Object> fieldEntry : fieldsMap.entrySet())
         {
           FieldTransformation fieldTransformation = objectTransformation.getBySourceName(fieldEntry.getKey());

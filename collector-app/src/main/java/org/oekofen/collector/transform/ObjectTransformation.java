@@ -1,17 +1,22 @@
 package org.oekofen.collector.transform;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class ObjectTransformation
 {
+  @JsonProperty
   private String sourceName;
+  @JsonProperty
   private String targetName;
+  @JsonProperty
   private List<String> sourceNames;
+  @JsonProperty
   private List<String> targetNames;
+  @JsonProperty
   private List<FieldTransformation> fields;
 
   public String getSourceName()
@@ -67,7 +72,7 @@ public class ObjectTransformation
     }
     if (targetName != null)
     {
-      return Arrays.asList(targetName);
+      return List.of(targetName);
     }
     // no targets configured, use source names as targets
     return getSourceNamesList();
@@ -87,7 +92,7 @@ public class ObjectTransformation
     }
     if (sourceName != null)
     {
-      return Arrays.asList(sourceName);
+      return List.of(sourceName);
     }
     return Collections.emptyList();
   }
@@ -105,6 +110,9 @@ public class ObjectTransformation
   @JsonIgnore
   public FieldTransformation getBySourceName(String sourceName)
   {
+    if (fields == null)
+      return null;
+
     for (FieldTransformation mapping : fields)
     {
       if (sourceName.equalsIgnoreCase(mapping.getSourceName()))
@@ -120,18 +128,23 @@ public class ObjectTransformation
     for (String sName : getSourceNamesList())
     {
       if (sName.equalsIgnoreCase(sourceName))
+      {
         return true;
+      }
     }
     return false;
   }
 
+  @JsonIgnore
   public String getTargetNameBySourceName(String sourceName)
   {
     List<String> allSourceNames = getSourceNamesList();
-    for (int i = 0; i < allSourceNames.size(); i++ )
+    for (int i = 0; i < allSourceNames.size(); i++)
     {
       if (allSourceNames.get(i).equalsIgnoreCase(sourceName))
+      {
         return getTargetNamesList().get(i);
+      }
     }
     return null;
   }

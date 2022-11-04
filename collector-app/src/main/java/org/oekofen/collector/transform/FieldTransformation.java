@@ -2,6 +2,7 @@ package org.oekofen.collector.transform;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 public class FieldTransformation
 {
   @JsonProperty(required = true)
