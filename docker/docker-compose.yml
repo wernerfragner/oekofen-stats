@@ -5,10 +5,24 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - "C:/projects/heizung/influxdb:/var/lib/influxdb"
+      - "./influxdb-data:/var/lib/influxdb2"
+    env_file:
+      - "./influxdb.env"
   grafana:
     image: grafana/grafana-oss
     ports:
       - 9000:3000
     volumes:
-      - "C:/projects/heizung/grafana:/var/lib/grafana"
+      - "./grafana-data:/var/lib/grafana"
+    depends_on:
+      - "influxdb"
+  collector-app:
+    image: oekofen-collector-app:0.0.1-SNAPSHOT
+    ports:
+      - 8080:8080
+    volumes:
+      - "./collector-app-config/:/config/"
+    env_file:
+      - "./collector-app.env"
+    depends_on:
+      - "influxdb"
