@@ -1,7 +1,7 @@
 version: '3'
 services:
   influxdb:
-    image: influxdb:latest
+    image: arm32v7/influxdb:latest
     ports:
       - 8086:8086
     volumes:
@@ -21,7 +21,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - "./collector-app-config/:/config/"
+      - "./collector-app-config/:/collector-app-config/"
     env_file:
       - "./collector-app.env"
     depends_on:
