@@ -1,0 +1,11 @@
+[
+  {
+    "name": "org.oekofen.collector.transform.ObjectTransformations"
+  },
+  {
+    "name": "org.oekofen.collector.transform.ObjectTransformation"
+  },
+  {
+    "name": "org.oekofen.collector.transform.FieldTransformation"
+  }
+]
