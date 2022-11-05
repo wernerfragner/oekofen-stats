@@ -1,11 +1,12 @@
 version: '3'
 services:
   influxdb:
-    image: arm32v7/influxdb:latest
+    image: arm32v7/influxdb:1.8.10
     ports:
       - 8086:8086
     volumes:
-      - "./influxdb-data:/var/lib/influxdb2"
+      - "./influxdb-data:/var/lib/influxdb"
+      - "./influxdb-config/influxdb.conf:/etc/influxdb/influxdb.conf:ro"
     env_file:
       - "./influxdb.env"
   grafana:
@@ -17,11 +18,11 @@ services:
     depends_on:
       - "influxdb"
   collector-app:
-    image: oekofen-collector-app:0.0.1-SNAPSHOT
+    image: wernerfragner/oekofen-collector-app:0.1.0-armv7
     ports:
       - 8080:8080
     volumes:
-      - "./collector-app-config/:/collector-app-config/"
+      - "./collector-app-config/:/config/"
     env_file:
       - "./collector-app.env"
     depends_on:
