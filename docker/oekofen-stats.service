@@ -1,6 +1,10 @@
-# this file must be located at:
+# This file must be located at:
 #  /etc/systemd/system/oekofen-stats.service
+# ---------------------
+# Please change the working directory and the directories to docker-compose accordingly.
+# ---------------------
 # See also https://imambaks.com/docker-compose-running-at-startup/
+# ---------------------
 
 [Unit]
 Description=Docker Compose for Oekofen Stats
