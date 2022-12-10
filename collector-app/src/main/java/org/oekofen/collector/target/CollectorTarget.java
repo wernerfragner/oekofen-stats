@@ -1,8 +1,8 @@
 package org.oekofen.collector.target;
 
-import java.util.Map;
+import org.oekofen.collector.CollectorRecord;
 
 public interface CollectorTarget
 {
-  void accept(Map<String, Object> data);
+  void accept(CollectorRecord rec);
 }

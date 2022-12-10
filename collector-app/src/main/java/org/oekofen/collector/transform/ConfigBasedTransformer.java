@@ -3,6 +3,7 @@ package org.oekofen.collector.transform;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.oekofen.collector.CollectorRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -42,15 +43,15 @@ public class ConfigBasedTransformer implements Transformer
   }
 
   @Override
-  public Map<String, Object> transform(Map<String, Object> data)
+  public CollectorRecord transform(CollectorRecord rec)
   {
     if (objectTransformations == null || objectTransformations.isEmpty())
     {
-      return data;
+      return rec;
     }
 
-    Map<String, Object> resultObjects = new HashMap<>();
-    for (Map.Entry<String, Object> objectEntry : data.entrySet())
+    CollectorRecord resultRec = new CollectorRecord();
+    for (Map.Entry<String, Object> objectEntry : rec.entrySet())
     {
       ObjectTransformation objectTransformation = objectTransformations.getBySourceName(objectEntry.getKey());
       if (objectTransformation != null && objectEntry.getValue() instanceof Map)
@@ -70,11 +71,11 @@ public class ConfigBasedTransformer implements Transformer
 
         if (resultObject.size() > 0)
         {
-          resultObjects.put(objectTransformation.getTargetName(), resultObject);
+          resultRec.put(objectTransformation.getTargetName(), resultObject);
         }
       }
     }
-    return resultObjects;
+    return resultRec;
   }
 
   private Object transformValue(FieldTransformation mapping, Object value)

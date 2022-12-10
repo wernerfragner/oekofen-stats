@@ -9,13 +9,15 @@ import com.influxdb.exceptions.InfluxException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.oekofen.collector.CollectorRecord;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.Map;
 
 @Component
+@ConditionalOnProperty(prefix = "collect.target", name = "influxdb.enabled")
 public class InfluxDbTarget implements CollectorTarget, AutoCloseable
 {
 
@@ -60,9 +62,9 @@ public class InfluxDbTarget implements CollectorTarget, AutoCloseable
 
 
   @Override
-  public void accept(Map<String, Object> data)
+  public void accept(CollectorRecord rec)
   {
-    Point point = convertJsonToPoint(data);
+    Point point = convertJsonToPoint(rec);
     LOG.info("Writing 'Point' to InfluxDB ...");
     try
     {
@@ -77,10 +79,10 @@ public class InfluxDbTarget implements CollectorTarget, AutoCloseable
     }
   }
 
-  private Point convertJsonToPoint(Map<String, Object> jsonMap)
+  private Point convertJsonToPoint(CollectorRecord rec)
   {
-    Point point = Point.measurement(measurement).time(Instant.now(), WritePrecision.S);
-    addFieldsFromMap(jsonMap, point, "");
+    Point point = Point.measurement(measurement).time(rec.getInstant(), WritePrecision.S);
+    addFieldsFromMap(rec.getData(), point, "");
     return point;
   }
 

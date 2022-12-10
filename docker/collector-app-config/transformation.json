@@ -156,6 +156,52 @@
           "targetName": "State"
         }
       ]
+    },
+    {
+      "sourceName": "csv",
+      "targetName": "CSV",
+      "fields": [
+        {
+          "sourceName": "KT Ist",
+          "targetName": "BoilerTemp (Current)"
+        },
+        {
+          "sourceName": "KT Soll",
+          "targetName": "BoilerTemp (Target)"
+        },
+        {
+          "sourceName": "BR",
+          "targetName": "BoilerOn"
+        },
+        {
+          "sourceName": "HK1 Mischer",
+          "targetName": "HC1.Blender"
+        },
+        {
+          "sourceName": "HK1 RT Ist",
+          "targetName": "HC1.BackFlowTemp (Current)"
+        },
+        {
+          "sourceName": "HK1 RT Soll",
+          "targetName": "HC1.BackFlowTemp (Target)"
+        },
+        {
+          "sourceName": "HK2 Mischer",
+          "targetName": "HC2.Blender"
+        },
+        {
+          "sourceName": "HK2 RT Ist",
+          "targetName": "HC2.BackFlowTemp (Current)"
+        },
+        {
+          "sourceName": "HK2 RT Soll",
+          "targetName": "HC2.BackFlowTemp (Target)"
+        },
+        {
+          "sourceName": "PU1 Pumpe",
+          "targetName": "Buffer.PumpPercent"
+        }
+      ]
     }
   ]
 }

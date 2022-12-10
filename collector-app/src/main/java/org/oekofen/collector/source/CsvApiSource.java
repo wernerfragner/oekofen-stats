@@ -1,7 +1,5 @@
 package org.oekofen.collector.source;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.oekofen.collector.CollectorRecord;
@@ -10,13 +8,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Component
-@ConditionalOnProperty(prefix = "collect.source", name = "json-api.enabled")
-public class JsonApiSource implements CollectorSource
+@ConditionalOnProperty(prefix = "collect.source", name = "csv-api.enabled")
+public class CsvApiSource implements CollectorSource
 {
   private static final Logger LOG = LogManager.getLogger();
 
@@ -27,32 +23,20 @@ public class JsonApiSource implements CollectorSource
   @Value("${collect.source.password}")
   private String password;
 
+  private final CsvToRecordsConverter converter = new CsvToRecordsConverter();
   private final RestTemplate restTemplate = new RestTemplate();
-
 
   public List<CollectorRecord> collect()
   {
     LOG.info("Executing HTTP GET request: {}", buildUrl("*****"));
-    String json = restTemplate.getForObject(buildUrl(password), String.class);
-    return Collections.singletonList(new CollectorRecord(convertToMap(json)));
-  }
-
-  private Map<String, Object> convertToMap(String json)
-  {
-    ObjectMapper mapper = new ObjectMapper();
-    try
-    {
-      return mapper.readValue(json, Map.class);
-    }
-    catch (JsonProcessingException e)
-    {
-      LOG.atError().withThrowable(e).log("Cannot convert input JSON to Map: {}", e.getMessage());
-      return Collections.emptyMap();
-    }
+    String csvContent = restTemplate.getForObject(buildUrl(password), String.class);
+    List<CollectorRecord> records = converter.convertToRecords(csvContent);
+    LOG.info("{} new CSV records available.", records.size());
+    return records;
   }
 
   private String buildUrl(String pwd)
   {
-    return "http://" + host + ":" + port + "/" + pwd + "/all";
+    return "http://" + host + ":" + port + "/" + pwd + "/log";
   }
 }
