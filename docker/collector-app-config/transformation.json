@@ -159,47 +159,68 @@
     },
     {
       "sourceName": "csv",
-      "targetName": "CSV",
+      "targetName": "Buffer",
+      "fields": [
+        {
+          "sourceName": "PU1 Pumpe",
+          "targetName": "PumpPercent"
+        }
+      ]
+    },
+    {
+      "sourceName": "csv",
+      "targetName": "Boiler",
       "fields": [
         {
           "sourceName": "KT Ist",
-          "targetName": "BoilerTemp (Current)"
+          "targetName": "Temp (Current)"
         },
         {
           "sourceName": "KT Soll",
-          "targetName": "BoilerTemp (Target)"
+          "targetName": "Temp (Target)"
         },
         {
           "sourceName": "BR",
-          "targetName": "BoilerOn"
-        },
+          "targetName": "On",
+          "intToBool": true
+        }
+      ]
+    },
+    {
+      "sourceName": "csv",
+      "targetName": "HC1",
+      "fields": [
         {
           "sourceName": "HK1 Mischer",
-          "targetName": "HC1.Blender"
+          "targetName": "BlenderOn",
+          "intToBool": true
         },
         {
           "sourceName": "HK1 RT Ist",
-          "targetName": "HC1.BackFlowTemp (Current)"
+          "targetName": "BackFlowTemp (Current)"
         },
         {
           "sourceName": "HK1 RT Soll",
-          "targetName": "HC1.BackFlowTemp (Target)"
-        },
+          "targetName": "BackFlowTemp (Target)"
+        }
+      ]
+    },
+    {
+      "sourceName": "csv",
+      "targetName": "HC2",
+      "fields": [
         {
           "sourceName": "HK2 Mischer",
-          "targetName": "HC2.Blender"
+          "targetName": "BlenderOn",
+          "intToBool": true
         },
         {
           "sourceName": "HK2 RT Ist",
-          "targetName": "HC2.BackFlowTemp (Current)"
+          "targetName": "BackFlowTemp (Current)"
         },
         {
           "sourceName": "HK2 RT Soll",
-          "targetName": "HC2.BackFlowTemp (Target)"
-        },
-        {
-          "sourceName": "PU1 Pumpe",
-          "targetName": "Buffer.PumpPercent"
+          "targetName": "BackFlowTemp (Target)"
         }
       ]
     }

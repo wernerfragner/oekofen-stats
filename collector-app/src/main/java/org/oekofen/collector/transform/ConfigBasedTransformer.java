@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -53,22 +53,10 @@ public class ConfigBasedTransformer implements Transformer
     CollectorRecord resultRec = new CollectorRecord();
     for (Map.Entry<String, Object> objectEntry : rec.entrySet())
     {
-      ObjectTransformation objectTransformation = objectTransformations.getBySourceName(objectEntry.getKey());
-      if (objectTransformation != null && objectEntry.getValue() instanceof Map)
+      List<ObjectTransformation> objectTransformationsForSource = objectTransformations.getBySourceName(objectEntry.getKey());
+      for (ObjectTransformation objectTransformation : objectTransformationsForSource)
       {
-        Map<String, Object> resultObject = new HashMap<>();
-        Map<String, Object> fieldsMap = (Map<String, Object>) objectEntry.getValue();
-        for (Map.Entry<String, Object> fieldEntry : fieldsMap.entrySet())
-        {
-          FieldTransformation fieldTransformation = objectTransformation.getBySourceName(fieldEntry.getKey());
-          if (fieldTransformation != null)
-          {
-            Object value = transformValue(fieldTransformation, fieldEntry.getValue());
-            resultObject.put(fieldTransformation.getTargetName(), value);
-          }
-          // else: no mapping, ignore field
-        }
-
+        Map<String, Object> resultObject = objectTransformation.transform(objectEntry);
         if (resultObject.size() > 0)
         {
           resultRec.put(objectTransformation.getTargetName(), resultObject);
@@ -78,16 +66,5 @@ public class ConfigBasedTransformer implements Transformer
     return resultRec;
   }
 
-  private Object transformValue(FieldTransformation mapping, Object value)
-  {
-    if (mapping.getDivideValueBy() != null && value instanceof Number nrValue)
-    {
-      return nrValue.floatValue() / mapping.getDivideValueBy();
-    }
-    if (mapping.getIntToBool() != null && value instanceof Number nrValue)
-    {
-      return (nrValue.intValue() == 1 ? Boolean.TRUE : Boolean.FALSE);
-    }
-    return value;
-  }
+
 }

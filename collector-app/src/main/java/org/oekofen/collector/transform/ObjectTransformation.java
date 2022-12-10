@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ObjectTransformation
 {
@@ -111,7 +113,9 @@ public class ObjectTransformation
   public FieldTransformation getBySourceName(String sourceName)
   {
     if (fields == null)
+    {
       return null;
+    }
 
     for (FieldTransformation mapping : fields)
     {
@@ -148,4 +152,26 @@ public class ObjectTransformation
     }
     return null;
   }
+
+  public Map<String, Object> transform(Map.Entry<String, Object> objectEntry)
+  {
+    Map<String, Object> resultObject = new HashMap<>();
+    if (objectEntry.getValue() instanceof Map)
+    {
+      Map<String, Object> fieldsMap = (Map<String, Object>) objectEntry.getValue();
+      for (Map.Entry<String, Object> fieldEntry : fieldsMap.entrySet())
+      {
+        FieldTransformation fieldTransformation = this.getBySourceName(fieldEntry.getKey());
+        if (fieldTransformation != null)
+        {
+          Object value = fieldTransformation.transformValue(fieldEntry.getValue());
+          resultObject.put(fieldTransformation.getTargetName(), value);
+        }
+        // else: no mapping, ignore field
+      }
+    }
+    return resultObject;
+  }
+
+
 }

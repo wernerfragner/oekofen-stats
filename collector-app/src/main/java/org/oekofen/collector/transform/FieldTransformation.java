@@ -53,4 +53,17 @@ public class FieldTransformation
   {
     this.intToBool = intToBool;
   }
+
+  public Object transformValue(Object value)
+  {
+    if (this.getDivideValueBy() != null && value instanceof Number nrValue)
+    {
+      return nrValue.floatValue() / this.getDivideValueBy();
+    }
+    if (this.getIntToBool() != null && value instanceof Number nrValue)
+    {
+      return (nrValue.intValue() == 1 ? Boolean.TRUE : Boolean.FALSE);
+    }
+    return value;
+  }
 }
