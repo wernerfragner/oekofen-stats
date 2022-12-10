@@ -23,10 +23,10 @@ Following targets are supported:
 1. Clone the repository
 2. Execute the gradle task 'buildBootImage'
 3. Tag the built image
-   ```docker tag oekofen-collector-app:0.2.0 wernerfragner/oekofen-collector-app:0.2.0```
+   ```docker tag oekofen-collector-app:0.2.1 wernerfragner/oekofen-collector-app:0.2.0```
 4. Login into Docker Hub (in the console window)
 5. Push the image to Docker Hub
-   ```docker push wernerfragner/oekofen-collector-app:0.2.0```
+   ```docker push wernerfragner/oekofen-collector-app:0.2.1```
 
 ### Raspberry - Docker
 
@@ -39,9 +39,9 @@ Raspberry itself in order to have the required arm32v7 build environment for the
 4. Copy this folder to 'heating/collector-app' at your Raspberry (e.g., using WinSCP).
 5. Open a SSH session to your Raspberry and navigate to this folder.
 6. Build the docker image using following command (version tag must be changed!)
-   ```docker build -t wernerfragner/oekofen-collector-app:0.2.0-armv7 .```
+   ```docker build -t wernerfragner/oekofen-collector-app:0.2.1-armv7 .```
 7. Push the image to Docker Hub
-   ```docker push wernerfragner/oekofen-collector-app:0.2.0-armv7```
+   ```docker push wernerfragner/oekofen-collector-app:0.2.1-armv7```
 
 ### VM Options
 
