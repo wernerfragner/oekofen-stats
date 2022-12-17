@@ -18,7 +18,7 @@ services:
     depends_on:
       - "influxdb"
   collector-app:
-    image: wernerfragner/oekofen-collector-app:0.2.1-armv7
+    image: wernerfragner/oekofen-collector-app:0.2.2-armv7
     ports:
       - 8080:8080
     volumes:
