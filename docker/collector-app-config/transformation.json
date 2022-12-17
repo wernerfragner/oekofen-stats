@@ -172,11 +172,11 @@
       "targetName": "Boiler",
       "fields": [
         {
-          "sourceName": "KT Ist",
+          "sourceName": "KT Ist ",
           "targetName": "Temp (Current)"
         },
         {
-          "sourceName": "KT Soll",
+          "sourceName": "KT Soll ",
           "targetName": "Temp (Target)"
         },
         {
