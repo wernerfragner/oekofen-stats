@@ -29,8 +29,10 @@ class CsvToRecordsConverterTest
     assertNotNull(firstRecData);
     assertEquals("09.12.2022", firstRecData.get("Datum"));
     assertEquals("00:03:13", firstRecData.get("Zeit"));
-    assertEquals(Integer.valueOf(0), firstRecData.get("HK1 Pumpe"));
+    assertEquals(0, firstRecData.get("HK1 Pumpe"));
     assertEquals(26.4, firstRecData.get("HK2 VL Ist"));
+    assertEquals(60.9, firstRecData.get("KT Ist"));
+    assertEquals(8.0, firstRecData.get("KT Soll"));
 
     // convert again, no result should be returned because same input has already been converted
     records = converter.convertToRecords(csvContent);

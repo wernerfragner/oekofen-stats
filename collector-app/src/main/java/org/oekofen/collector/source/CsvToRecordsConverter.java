@@ -42,7 +42,9 @@ public class CsvToRecordsConverter
     for (String line : csvContent.split("\n"))
     {
       if (line.trim().isEmpty())
+      {
         continue;
+      }
 
       if (header == null)
       {
@@ -68,7 +70,7 @@ public class CsvToRecordsConverter
         int bracketIdx = item.indexOf("[");
         if (bracketIdx > 0)
         {
-          header.add(item.substring(0, bracketIdx));
+          header.add(item.substring(0, bracketIdx).trim());
         }
         else
         {
