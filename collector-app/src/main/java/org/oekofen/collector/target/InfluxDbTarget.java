@@ -81,8 +81,8 @@ public class InfluxDbTarget implements CollectorTarget, AutoCloseable
 
   private Point convertJsonToPoint(CollectorRecord rec)
   {
-    Point point = Point.measurement(measurement).time(rec.getInstant(), WritePrecision.S);
-    addFieldsFromMap(rec.getData(), point, "");
+    Point point = Point.measurement(measurement).time(rec.instant(), WritePrecision.S);
+    addFieldsFromMap(rec.data(), point, "");
     return point;
   }
 

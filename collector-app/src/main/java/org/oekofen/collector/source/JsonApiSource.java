@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class JsonApiSource implements CollectorSource
   {
     LOG.info("Executing HTTP GET request: {}", buildUrl("*****"));
     String json = restTemplate.getForObject(buildUrl(password), String.class);
-    return Collections.singletonList(new CollectorRecord(convertToMap(json)));
+    return Collections.singletonList(new CollectorRecord(convertToMap(json), Instant.now()));
   }
 
   private Map<String, Object> convertToMap(String json)

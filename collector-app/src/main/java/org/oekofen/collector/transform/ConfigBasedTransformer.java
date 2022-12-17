@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class ConfigBasedTransformer implements Transformer
       return rec;
     }
 
-    CollectorRecord resultRec = new CollectorRecord();
+    CollectorRecord resultRec = new CollectorRecord(new HashMap<>(), rec.instant());
     for (Map.Entry<String, Object> objectEntry : rec.entrySet())
     {
       List<ObjectTransformation> objectTransformationsForSource = objectTransformations.getBySourceName(objectEntry.getKey());

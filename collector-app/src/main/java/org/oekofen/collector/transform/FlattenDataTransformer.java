@@ -13,8 +13,8 @@ public class FlattenDataTransformer implements Transformer
   public CollectorRecord transform(CollectorRecord rec)
   {
     Map<String, Object> outputMap = new HashMap<>();
-    addFieldsFromMap(rec.getData(), outputMap, "");
-    return new CollectorRecord(outputMap);
+    addFieldsFromMap(rec.data(), outputMap, "");
+    return new CollectorRecord(outputMap, rec.instant());
   }
 
 

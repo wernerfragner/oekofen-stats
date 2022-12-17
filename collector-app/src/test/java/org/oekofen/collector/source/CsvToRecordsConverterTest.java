@@ -24,7 +24,7 @@ class CsvToRecordsConverterTest
     List<CollectorRecord> records = converter.convertToRecords(csvContent);
     assertEquals(5, records.size());
     CollectorRecord firstRecord = records.get(0);
-    assertEquals(Instant.parse("2022-12-09T00:03:13+01:00"), firstRecord.getInstant());
+    assertEquals(Instant.parse("2022-12-09T00:03:13+01:00"), firstRecord.instant());
     Map<String, Object> firstRecData = (Map<String, Object>) firstRecord.get("csv");
     assertNotNull(firstRecData);
     assertEquals("09.12.2022", firstRecData.get("Datum"));
