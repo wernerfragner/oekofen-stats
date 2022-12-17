@@ -1,7 +1,6 @@
 package org.oekofen.collector.source;
 
 import org.oekofen.collector.CollectorRecord;
-import org.oekofen.collector.util.HashUtil;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -13,26 +12,10 @@ import java.util.*;
 public class CsvToRecordsConverter
 {
 
-  private String csvHash = null;
-
-  private boolean csvAlreadyImported(String csvContent)
-  {
-    String newHash = HashUtil.createHash(csvContent);
-    if (newHash.equals(csvHash))
-    {
-      return true;
-    }
-    csvHash = newHash;
-    return false;
-  }
 
   public List<CollectorRecord> convertToRecords(String csvContent)
   {
     if (csvContent == null || csvContent.isEmpty())
-    {
-      return Collections.emptyList();
-    }
-    if (csvAlreadyImported(csvContent))
     {
       return Collections.emptyList();
     }
