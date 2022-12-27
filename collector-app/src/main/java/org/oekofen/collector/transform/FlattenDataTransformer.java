@@ -1,5 +1,6 @@
 package org.oekofen.collector.transform;
 
+import org.oekofen.collector.CollectorRecord;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -9,11 +10,11 @@ import java.util.Map;
 public class FlattenDataTransformer implements Transformer
 {
   @Override
-  public Map<String, Object> transform(Map<String, Object> data)
+  public CollectorRecord transform(CollectorRecord rec)
   {
     Map<String, Object> outputMap = new HashMap<>();
-    addFieldsFromMap(data, outputMap, "");
-    return outputMap;
+    addFieldsFromMap(rec.data(), outputMap, "");
+    return new CollectorRecord(outputMap, rec.instant());
   }
 
 

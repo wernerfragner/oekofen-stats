@@ -4,15 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.oekofen.collector.CollectorRecord;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Component
-public class JsonApiSource
+@ConditionalOnProperty(prefix = "collect.source", name = "json-api.enabled")
+public class JsonApiSource implements CollectorSource
 {
   private static final Logger LOG = LogManager.getLogger();
 
@@ -23,14 +28,14 @@ public class JsonApiSource
   @Value("${collect.source.password}")
   private String password;
 
-  private RestTemplate restTemplate = new RestTemplate();
+  private final RestTemplate restTemplate = new RestTemplate();
 
 
-  public Map<String, Object> collect()
+  public List<CollectorRecord> collect()
   {
     LOG.info("Executing HTTP GET request: {}", buildUrl("*****"));
     String json = restTemplate.getForObject(buildUrl(password), String.class);
-    return convertToMap(json);
+    return Collections.singletonList(new CollectorRecord(convertToMap(json), Instant.now()));
   }
 
   private Map<String, Object> convertToMap(String json)

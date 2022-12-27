@@ -4,6 +4,8 @@ package org.oekofen.collector.transform;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ObjectTransformations
@@ -22,11 +24,14 @@ public class ObjectTransformations
   }
 
   @JsonIgnore
-  public ObjectTransformation getBySourceName(String sourceName)
+  public List<ObjectTransformation> getBySourceName(String sourceName)
   {
     if (objects == null)
-      return null;
+    {
+      return Collections.emptyList();
+    }
 
+    List<ObjectTransformation> results = new ArrayList<>();
     for (ObjectTransformation mapping : objects)
     {
       if (mapping.matchesSourceName(sourceName))
@@ -35,10 +40,10 @@ public class ObjectTransformations
         result.setSourceName(sourceName);
         result.setTargetName(mapping.getTargetNameBySourceName(sourceName));
         result.setFields(mapping.getFields());
-        return result;
+        results.add(result);
       }
     }
-    return null;
+    return results;
   }
 
   public boolean isEmpty()
