@@ -16,7 +16,10 @@ repositories {
 
 dependencies {
     implementation 'com.influxdb:influxdb-client-java:6.6.0'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        // web server currently not needed
+        exclude module: 'spring-boot-starter-tomcat'
+    }
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
