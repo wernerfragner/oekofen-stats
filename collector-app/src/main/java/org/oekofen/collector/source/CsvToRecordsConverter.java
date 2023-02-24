@@ -12,7 +12,6 @@ import java.util.*;
 public class CsvToRecordsConverter
 {
 
-
   public List<CollectorRecord> convertToRecords(String csvContent)
   {
     if (csvContent == null || csvContent.isEmpty())
@@ -35,7 +34,11 @@ public class CsvToRecordsConverter
       }
       else
       {
-        records.add(toRecord(header, line));
+        CollectorRecord rec = toRecord(header, line);
+        if (rec != null)
+        {
+          records.add(rec);
+        }
       }
     }
     return records;
@@ -48,7 +51,7 @@ public class CsvToRecordsConverter
     for (String item : line.split(";"))
     {
       item = item.trim();
-      if (!item.isEmpty())
+      if (!item.isBlank())
       {
         int bracketIdx = item.indexOf("[");
         if (bracketIdx > 0)
@@ -86,6 +89,11 @@ public class CsvToRecordsConverter
 
         csvData.put(header.get(i), tryConvertValue(values[i].trim().replace(",", ".")));
       }
+    }
+
+    if (date == null || time == null)
+    {
+      return null;
     }
 
     Instant instant = toInstant(date, time);
