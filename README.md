@@ -78,26 +78,44 @@ in the 'docker' directory.
 
 ### Install docker on Raspberry PI Linux
 
-Download install script:
+Download install script:  
 ```curl -fsSL https://get.docker.com -o get-docker.sh```
 
-Execute Script:
+Execute Script:  
 ```sudo sh get-docker.sh```
 
-Add current user to group 'docker':
+Add current user to group 'docker':  
 ```sudo usermod -aG docker $USER```
 
 Log off and log on current user in order that changes take effect.
 
 ### Install docker-compose on Raspberry PI Linux
 
-Create a folder to store docker-compose binaries:
+Create a folder to store docker-compose binaries:  
 ```mkdir -p ~/.docker/cli-plugins/```
 
-Go to the release site in order to lookup the most current version:  https://github.com/docker/compose/releases/
+Go to the release site in order to lookup the most current version: https://github.com/docker/compose/releases/
 
-Download the most current version into the previously created folder:
+Download the most current version into the previously created folder:  
 ```curl -SL https://github.com/docker/compose/releases/download/v2.2.2/docker-compose-linux-armv7 -o ~/.docker/cli-plugins/docker-compose```
 
 Make docker-compose executable:
 ```chmod +x ~/.docker/cli-plugins/docker-compose```
+
+### Run docker compose file as systemd service
+
+1. Make sure that the file ```oekofen-stats.service``` is located at ```/etc/systemd/system```  
+   You can use following copy command to copy it from the 'docker' folder of the oekofen-app:  
+   ```sudo cp oekofen-stats.service /etc/systemd/system/oekofen-stats.service```
+
+2. Enable the systemd service:  
+   ```sudo systemctl enable oekofen-stats.service```
+
+3. You can manually start the service:  
+   ```sudo systemctl start oekofen-stats.service```
+
+4. With this command you can check the status (and the last logs) of the service:  
+   ```sudo systemctl status oekofen-stats```
+
+5. After rebooting the docker containers should be running:  
+   ```sudo reboot```
