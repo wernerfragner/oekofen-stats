@@ -14,9 +14,9 @@ After=docker.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/home/ubuntu/heating/docker-compose.yml
-ExecStart=/usr/local/bin/docker-compose up -d
-ExecStop=/usr/local/bin/docker-compose down
+WorkingDirectory=/home/ubuntu/heating/
+ExecStart=docker-compose up -d
+ExecStop=docker-compose down
 TimeoutStartSec=0
 
 [Install]
