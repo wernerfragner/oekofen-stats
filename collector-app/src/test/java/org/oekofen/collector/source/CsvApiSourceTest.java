@@ -17,7 +17,14 @@ class CsvApiSourceTest
   private final CsvApiSource source = new CsvApiSource();
 
   @Test
-  void convertToRecords() throws IOException
+  void getNewRecords_NullCsvContent() throws IOException
+  {
+    List<CollectorRecord> records = source.getNewRecords("log0", null);
+    assertEquals(0, records.size());
+  }
+
+  @Test
+  void getNewRecords() throws IOException
   {
     String csvContent = loadResourceAsString("csv-api-example.csv");
 

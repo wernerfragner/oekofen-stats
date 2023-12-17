@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.oekofen.collector.CollectorRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,8 +34,25 @@ public class JsonApiSource implements CollectorSource
 
   public List<CollectorRecord> collect()
   {
-    LOG.info("Executing HTTP GET request: {}", buildUrl("*****"));
+    // fetch data
+
+    String url = buildUrl("*****");
+    LOG.info("Executing HTTP GET request: {}", url);
     String json = restTemplate.getForObject(buildUrl(password), String.class);
+
+    // convert received data
+
+    return getNewRecords(json, url);
+  }
+
+  @NotNull
+  List<CollectorRecord> getNewRecords(String json, String url)
+  {
+    if (json == null || json.isBlank())
+    {
+      LOG.warn("JSON endpoint returned an empty result {}.", url);
+      return Collections.emptyList();
+    }
     return Collections.singletonList(new CollectorRecord(convertToMap(json), Instant.now()));
   }
 

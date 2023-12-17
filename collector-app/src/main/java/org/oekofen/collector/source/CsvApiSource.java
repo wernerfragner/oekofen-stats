@@ -100,7 +100,12 @@ public class CsvApiSource implements CollectorSource
   List<CollectorRecord> getNewRecords(String endpoint, String csvContent)
   {
     List<CollectorRecord> records;
-    if (csvAlreadyImported(endpoint, csvContent))
+    if (csvContent == null || csvContent.isBlank())
+    {
+      records = Collections.emptyList();
+      LOG.info("No CSV records are available for endpoint {}.", endpoint);
+    }
+    else if (csvAlreadyImported(endpoint, csvContent))
     {
       records = Collections.emptyList();
       LOG.info("No new CSV records are available for endpoint {}.", endpoint);
