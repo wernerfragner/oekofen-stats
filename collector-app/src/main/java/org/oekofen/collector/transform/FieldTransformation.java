@@ -21,7 +21,7 @@ public class FieldTransformation
 
   public void setSourceName(String sourceName)
   {
-    this.sourceName = sourceName;
+    this.sourceName = sourceName.trim();
   }
 
   public String getTargetName()
@@ -31,7 +31,7 @@ public class FieldTransformation
 
   public void setTargetName(String targetName)
   {
-    this.targetName = targetName;
+    this.targetName = targetName.trim();
   }
 
   public Float getDivideValueBy()

@@ -80,7 +80,6 @@ public class ObjectTransformation
     return getSourceNamesList();
   }
 
-
   @JsonIgnore
   public List<String> getSourceNamesList()
   {
@@ -109,6 +108,11 @@ public class ObjectTransformation
     this.fields = fields;
   }
 
+  private String prepareName(String sourceName)
+  {
+    return sourceName.trim();
+  }
+
   @JsonIgnore
   public FieldTransformation getBySourceName(String sourceName)
   {
@@ -117,6 +121,7 @@ public class ObjectTransformation
       return null;
     }
 
+    sourceName = prepareName(sourceName);
     for (FieldTransformation mapping : fields)
     {
       if (sourceName.equalsIgnoreCase(mapping.getSourceName()))
@@ -127,11 +132,13 @@ public class ObjectTransformation
     return null;
   }
 
+
   public boolean matchesSourceName(String sourceName)
   {
+    sourceName = prepareName(sourceName);
     for (String sName : getSourceNamesList())
     {
-      if (sName.equalsIgnoreCase(sourceName))
+      if (prepareName(sName).equalsIgnoreCase(sourceName))
       {
         return true;
       }
@@ -142,12 +149,14 @@ public class ObjectTransformation
   @JsonIgnore
   public String getTargetNameBySourceName(String sourceName)
   {
+    sourceName = prepareName(sourceName);
     List<String> allSourceNames = getSourceNamesList();
     for (int i = 0; i < allSourceNames.size(); i++)
     {
-      if (allSourceNames.get(i).equalsIgnoreCase(sourceName))
+      String sName = allSourceNames.get(i);
+      if (prepareName(sName).equalsIgnoreCase(sourceName))
       {
-        return getTargetNamesList().get(i);
+        return prepareName(getTargetNamesList().get(i));
       }
     }
     return null;
