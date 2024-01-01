@@ -1,5 +1,8 @@
 package org.oekofen.collector.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -7,6 +10,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class HashUtil
 {
+
+  private static final Logger LOG = LogManager.getLogger();
 
   private HashUtil()
   {
@@ -26,6 +31,7 @@ public class HashUtil
     }
     catch (NoSuchAlgorithmException alg)
     {
+      LOG.info("SHA-256 not available for calculating hash, falling back to MD5.");
       try
       {
         return MessageDigest.getInstance("MD5");
