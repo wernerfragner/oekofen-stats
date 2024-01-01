@@ -5,7 +5,6 @@ import org.oekofen.collector.CollectorRecord;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -126,11 +125,6 @@ public class CsvToRecordsConverter
   {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
     LocalDateTime dt = LocalDateTime.parse(date + " " + time, formatter);
-    return dt.toInstant(getLocalZoneOffset());
-  }
-
-  private static ZoneOffset getLocalZoneOffset()
-  {
-    return ZonedDateTime.now().getZone().getRules().getOffset(Instant.now());
+    return dt.toInstant(ZoneOffset.UTC); // assume that data is in UTC
   }
 }
