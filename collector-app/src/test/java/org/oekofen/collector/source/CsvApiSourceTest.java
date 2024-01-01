@@ -39,6 +39,25 @@ class CsvApiSourceTest
   }
 
   @Test
+  void collect_noCsvDataAvailableWithInfoPage()
+  {
+    String noContent = """
+            Oekofen JSON Interface   V4.00b   http://www.oekofen.at
+                        
+            usage:
+            http://touch_ip:JSON_port/password/command
+            """;
+
+    csvApi.registerCsvContent("log0", noContent);
+    csvApi.registerCsvContent("log1", noContent);
+    csvApi.registerCsvContent("log2", noContent);
+    csvApi.registerCsvContent("log3", noContent);
+
+    var records = source.collect();
+    assertEquals(0, records.size());
+  }
+
+  @Test
   void collect_csvDataAvailable()
   {
     String csvContent = """

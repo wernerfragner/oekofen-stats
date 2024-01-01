@@ -42,18 +42,6 @@ public class CsvApiSource implements CollectorSource
     this.waitTimeMillis = timeMillis;
   }
 
-  private boolean csvAlreadyImported(String endpoint, String csvContent)
-  {
-    String newHash = HashUtil.createHash(csvContent);
-    String csvHash = csvHashes.get(endpoint);
-    if (newHash.equals(csvHash))
-    {
-      return true;
-    }
-    csvHashes.put(endpoint, newHash);
-    return false;
-  }
-
   public List<CollectorRecord> collect()
   {
     if (!shouldRequest())
@@ -120,6 +108,18 @@ public class CsvApiSource implements CollectorSource
       LOG.info("{} new CSV records are available for endpoint {}.", records.size(), endpoint);
     }
     return records;
+  }
+
+  private boolean csvAlreadyImported(String endpoint, String csvContent)
+  {
+    String newHash = HashUtil.createHash(csvContent);
+    String csvHash = csvHashes.get(endpoint);
+    if (newHash.equals(csvHash))
+    {
+      return true;
+    }
+    csvHashes.put(endpoint, newHash);
+    return false;
   }
 
   private void logCsvContent(String endpoint, String csvContent)
