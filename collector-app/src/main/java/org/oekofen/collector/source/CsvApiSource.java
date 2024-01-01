@@ -4,10 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.oekofen.collector.CollectorRecord;
 import org.oekofen.collector.util.HashUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -17,25 +17,29 @@ public class CsvApiSource implements CollectorSource
 {
   private static final Logger LOG = LogManager.getLogger();
 
-  @Value("${collect.source.host}")
-  private String host;
-  @Value("${collect.source.port:4321}")
-  private int port;
-  @Value("${collect.source.password}")
-  private String password;
-
   @Value("${collect.source.csv-api.interval:10}")
   private int interval = 10;
 
+  private final CsvApi csvApi;
   private final CsvToRecordsConverter converter = new CsvToRecordsConverter();
-  private final RestTemplate restTemplate = new RestTemplate();
-
   private final Map<String, String> csvHashes = new HashMap<>();
   private long requestCount = 0;
+  private long waitTimeMillis = 3000;
+
+  @Autowired
+  public CsvApiSource(CsvApi csvApi)
+  {
+    this.csvApi = csvApi;
+  }
 
   public void setInterval(int interval)
   {
     this.interval = interval;
+  }
+
+  public void setWaitTimeMillis(long timeMillis)
+  {
+    this.waitTimeMillis = timeMillis;
   }
 
   private boolean csvAlreadyImported(String endpoint, String csvContent)
@@ -62,12 +66,12 @@ public class CsvApiSource implements CollectorSource
     {
       String endpoint = "log" + i;
 
-      LOG.info("Executing HTTP GET request: {}", buildUrl("*****", endpoint));
-      String csvContent = restTemplate.getForObject(buildUrl(password, endpoint), String.class);
+      String csvContent = csvApi.getCsvContent(endpoint);
+      logCsvContent(endpoint, csvContent);
       allRecords.addAll(getNewRecords(endpoint, csvContent));
 
       // sleep in order to not hit the JSON API request time limit
-      sleep(3000);
+      sleep(waitTimeMillis);
     }
     return allRecords;
   }
@@ -118,8 +122,23 @@ public class CsvApiSource implements CollectorSource
     return records;
   }
 
-  private String buildUrl(String pwd, String endpoint)
+  private void logCsvContent(String endpoint, String csvContent)
   {
-    return "http://" + host + ":" + port + "/" + pwd + "/" + endpoint;
+    if (!LOG.isDebugEnabled())
+    {
+      return;
+    }
+
+    if (csvContent == null || csvContent.isBlank())
+    {
+      LOG.debug("CSV-Content for endpoint {}: empty", endpoint);
+    }
+    else
+    {
+      int maxLength = Math.min(1000, csvContent.length());
+      LOG.debug("CSV-Content for endpoint {}: {}", endpoint, csvContent.substring(0, maxLength));
+    }
   }
+
+
 }
