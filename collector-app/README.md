@@ -10,6 +10,11 @@ Following targets are supported:
 
 ## Quick Start
 
+### IntelliJ IDEA
+
+1. Adapt the properties file in the config folder of the app.
+2. Start the app using the existing CollectorApplication.run.xml file.
+
 ### Windows - Batch File
 
 1. Clone the repository
