@@ -35,6 +35,7 @@ tasks.named('bootBuildImage') {
 
 
 tasks.register('copyLibs', Copy) {
+    dependsOn(bootJar)
     group 'build setup'
     from layout.buildDirectory.dir("libs")
     into layout.buildDirectory.dir("setup")
@@ -52,12 +53,14 @@ tasks.register('copyConfigs', Copy) {
     into layout.buildDirectory.dir("setup/config")
 }
 
-task buildSetupFolder(dependsOn: ["bootJar", "copyLibs", "copySetup", "copyConfigs"])
+tasks.register('buildSetupFolder')
 {
+    dependsOn(["copyLibs", "copySetup", "copyConfigs"])
     group 'build setup'
 }
 
 tasks.register('copyLibsDocker', Copy) {
+    dependsOn(bootJar)
     group 'build setup'
     from layout.buildDirectory.dir("libs")
     into layout.buildDirectory.dir("docker")
@@ -69,8 +72,8 @@ tasks.register('copyConfigsDocker', Copy) {
     into layout.buildDirectory.dir("docker")
 }
 
-task buildDockerFolder(dependsOn: ["bootJar", "copyLibsDocker", "copyConfigsDocker"])
-{
+tasks.register('buildDockerFolder') {
+    dependsOn(["copyLibsDocker", "copyConfigsDocker"])
     group 'build setup'
 }
 
